@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 
+import Paragraph from './Paragraph'
+
 function App() {
   // const [count, setCount] = useState(0)
   // const [subject, setSubject] = useState("React")/
@@ -41,14 +43,21 @@ function App() {
         {/* <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button> */}
-        {data.map((item) => {
+        {/* {data.map((item) => {
           return (
             <div key={item.id}>
               <h2>{item.title || item.name}</h2>
               <p>{item.body || item.phone}</p>
             </div>
           )
-        })}
+        })} */}
+
+        {/* Paragraph */}
+        <Paragraph
+          title="React"
+          body="React is a JavaScript library for building user interfaces."
+          image='https://www.shutterstock.com/image-vector/p-dummy-logo-template-design-600nw-2291517189.jpg'
+        />
       </div>
     </>
   )

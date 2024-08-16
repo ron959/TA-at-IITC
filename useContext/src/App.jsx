@@ -5,6 +5,9 @@ import Dashboard from './components/Dashboard';
 
 const AuthenticatedApp = () => {
   const { user } = useAuth();
+  // const context = useAuth();
+  // console.log(context);
+  
 
   return user ? <Dashboard /> : (
     <div>
