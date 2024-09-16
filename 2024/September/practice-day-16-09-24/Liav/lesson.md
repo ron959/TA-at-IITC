@@ -1,5 +1,9 @@
 ## 🥵 Task 16: Reverse Strings in an Array 🥵
-**TODO**: Write a function that takes an array of strings and returns a new array where each string is reversed.
+**TODO**: 
+1. DONE: Write a function | 
+2. DONE: that takes an array of strings | 
+3. DONE: and returns a new array |
+4. DONE: where each string is reversed. |
 
 ```js
 function reverseStrings(strings) {
