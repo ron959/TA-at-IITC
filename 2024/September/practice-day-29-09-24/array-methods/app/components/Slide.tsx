@@ -51,7 +51,7 @@ solution,
         <div
           className="challenge"
         >
-            <Solution code={solution} />
+            <Solution code={solution as string} />
         </div>
       )}
     </div>
