@@ -348,11 +348,22 @@ const products = [
     { name: 'Smartwatch', price: 1800, quantity: 0 } // Another product out of stock
   ];
 
-  const students = [
-    { name: 'David', averageGrade: 85 },
-    { name: 'Sara', averageGrade: 90 },
+const students = [
+    { name: 'Devid', averageGrade: 85 },
+    { name: 'Dara', averageGrade: 85 },
     { name: 'Michael', averageGrade: 85 },
     { name: 'John', averageGrade: 75 },
     { name: 'Anna', averageGrade: 90 },
     { name: 'Ben', averageGrade: 95 }
-  ];
+];
+
+const sortedArray = students.sort((a, b) => {
+    if (b.averageGrade === a.averageGrade) {
+        // sort by name 
+        return a.name.localeCompare(b.name)
+    }
+    return b.averageGrade - a.averageGrade
+})
+
+console.log(sortedArray);
+
