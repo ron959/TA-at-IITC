@@ -91,3 +91,68 @@
 // ```
 // Hello, Alice!
 // ```
+
+// const greeting = ((fName, cb) => {
+//     cb()
+// })
+
+// const dpMsg = (string = "Any Name") => {
+//     console.log(`Hello ${string}`);
+    
+// }
+// greeting("LIAV", dpMsg)
+
+// const imgDiv = document.getElementsByClassName("image-container")[0];
+// // console.log(imgDiv);
+
+// function insertImage (src) {
+//     imgDiv.insertAdjacentHTML("afterbegin", `
+//         <img src="${src}" alt="Dog Image">    
+//     `);
+// }
+
+// // insertImage("dsfdsf")
+
+// fetch("https://dog.ceo/api/breeds/image/random")
+//     .then(response => response.json())
+//     .then(data => {
+//         console.log(data);
+//         insertImage(data.message)
+//     });
+
+// console.log("end");
+const task1 = () => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve("Task 1");
+        }, 1000);
+    });
+}
+
+const task2 = (data) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(`Task 2 with ${data}`);
+        }, 1000);
+    });
+}
+
+const task3 = (data) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(`Task 3 with ${data}`);
+        }, 1000);
+    });
+}
+
+
+
+async function runTasks() {
+    const result1 = await task1();
+    const result2 = await task2(result1);
+    const result3 = await task3(result2);
+    console.log(result3);
+    console.log("All tasks completed");
+}
+
+runTasks();
