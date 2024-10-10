@@ -4,10 +4,13 @@ console.log('main.js');
 const formElement = document.querySelector("form")
 const containerElement = document.querySelector(".container")
 const listBtnElement = document.querySelector("#get-list")
+const ulElement = document.getElementById("name-list")
 
 // console.log(formElement);
 // console.log(containerElement);
-console.log(listBtnElement);
+// console.log(listBtnElement);
+console.log(ulElement);
+
 
 function formSubmit (formObejct) {
     // console.log(formObejct.number);
@@ -22,15 +25,29 @@ function formSubmit (formObejct) {
     containerElement.appendChild(imageElement);
 }
 
+
+const renderNames = (namesArray) => {
+    namesArray.forEach(name => {
+        const liElement = document.createElement("li")
+        liElement.innerText = name
+        ulElement.appendChild(liElement)
+        // console.log(name);
+    });
+}
+
 const getDuckList = () => {
-    fetch('https://random-d.uk/api/v2/list', {
-        AccessControlAllowOrigin: '*'
-    })
+    const proxyUrl = "https://corsproxy.io/?";
+    const targetUrl = 'https://random-d.uk/api/v2/list';
+
+    fetch(proxyUrl + encodeURIComponent(targetUrl))
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            console.log('Images:', data.images);
-            console.log('GIFs:', data.gifs);
+            // console.log('Images:', data.images);
+            // console.log('GIFs:', data.gifs);
+            renderNames(data.gifs);
+        })
+        .catch(error => {
+            console.error('Error fetching duck list:', error);
         });
 }
 
