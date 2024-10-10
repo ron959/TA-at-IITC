@@ -2,24 +2,22 @@ console.log('main.js');
 
 
 const formElement = document.querySelector("form")
-console.log(formElement);
+// console.log(formElement);
+
+const containerElement = document.querySelector(".container")
+console.log(containerElement);
 
 function formSubmit (formObejct) {
     // console.log(formObejct.number);
+    const url = `https://random-d.uk/api/v2/${formObejct.number}.jpg`;
+    console.log(url);
 
-    fetch(`https://random-d.uk/api/v2/${formObejct.number}.jpg`)
-        .then(response => {
-            console.log(response);
-            return response.blob()
-        })
-        .then(imageBlob => {
-            console.log(imageBlob);
-            
-            const imageURL = URL.createObjectURL(imageBlob);
-            
-            // Use imageURL in an <img> tag or as needed
-        });
+    // Insert image
 
+    const imageElement = document.createElement("img");
+    imageElement.src = url;
+    containerElement.innerHTML = "";
+    containerElement.appendChild(imageElement);
 }
 
 formElement.addEventListener("submit", (e) => {
