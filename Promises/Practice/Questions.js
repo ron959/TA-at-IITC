@@ -1,6 +1,32 @@
 // 1. Create a new Promise that resolves with the value "Hello, World!".
 
+const question1 = new Promise((resolve) => {
+    setTimeout(() => {
+        resolve("Hello, World!");
+    }, 3000);
+})
+
+// question1.then(res => {
+//     console.log(res); 
+// })
+
+// console.log("TEst");
+
+async function getPromise() {
+    const result = await question1;
+    console.log(result);
+}
+
+getPromise()
+
 // 2. Create a new Promise that rejects with the value "Error occurred".
+const q2 = new Promise((_, reject) => {
+    reject("Error occurred")
+})
+
+q2.catch(err => {
+    console.error(err)
+})
 
 // 3. Write a Promise that resolves after 2 seconds with the value "Resolved!".
 
