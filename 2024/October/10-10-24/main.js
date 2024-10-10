@@ -12,9 +12,9 @@ const ulElement = document.getElementById("name-list")
 console.log(ulElement);
 
 
-function formSubmit (formObejct) {
+function formSubmit(endpoint) {
     // console.log(formObejct.number);
-    const url = `https://random-d.uk/api/v2/${formObejct.number}.jpg`;
+    const url = `https://random-d.uk/api/v2/${endpoint}`;
     console.log(url);
 
     // Insert image
@@ -27,9 +27,12 @@ function formSubmit (formObejct) {
 
 
 const renderNames = (namesArray) => {
+    console.log(namesArray);
+    
     namesArray.forEach(name => {
         const liElement = document.createElement("li")
         liElement.innerText = name
+        liElement.addEventListener("click", () => formSubmit(name))
         ulElement.appendChild(liElement)
         // console.log(name);
     });
@@ -44,7 +47,7 @@ const getDuckList = () => {
         .then(data => {
             // console.log('Images:', data.images);
             // console.log('GIFs:', data.gifs);
-            renderNames(data.gifs);
+            renderNames(data.images);
         })
         .catch(error => {
             console.error('Error fetching duck list:', error);
@@ -59,7 +62,7 @@ formElement.addEventListener("submit", (e) => {
     const formObject = Object.fromEntries(formData);
     // console.log(formObject);
 
-    formSubmit(formObject);
+    formSubmit(formObject.number + ".jpg");
 })
 
 listBtnElement.addEventListener("click", () => {
