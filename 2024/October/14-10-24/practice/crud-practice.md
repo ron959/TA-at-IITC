@@ -1,5 +1,3 @@
-Certainly! Here are 20 exercises without the solutions, only the tasks:
-
 ### Part 1: API Operations through Postman
 
 #### **Exercise 1: Create a Post**
