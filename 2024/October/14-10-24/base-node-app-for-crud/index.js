@@ -19,10 +19,22 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((err) => console.error(err));
 
 // Routes
-app.get('/', (req, res) => {
-  res.send("Hello There!, Youv\'e reached the root of Lirone\'s Blog API");
-});
 app.use('/posts', postRoutes);
+
+app.get('/', (req, res) => {
+  res.send({
+    status: 200,
+    message: "Hello There!, Youv\'e reached the root of Lirone\'s Blog API"
+  });
+});
+
+// 404 Route
+app.use((req, res) => {
+  res.status(404).send({
+    status: 404,
+    message: 'Not Found',
+  });
+});
 
 // Start the server
 app.listen(PORT, () => {
