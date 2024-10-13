@@ -19,6 +19,9 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((err) => console.error(err));
 
 // Routes
+app.get('/', (req, res) => {
+  res.send("Hello There!, Youv\'e reached the root of Lirone\'s Blog API");
+});
 app.use('/posts', postRoutes);
 
 // Start the server
