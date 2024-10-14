@@ -6,12 +6,12 @@ const cors = require('cors');
 require('dotenv').config();
 
 
-// allow all cors requests
-app.use(cors());
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// allow all cors requests
+app.use(cors());
 // Middleware
 app.use(bodyParser.json());
 
