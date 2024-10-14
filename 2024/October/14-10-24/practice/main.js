@@ -6,6 +6,7 @@ const getAllPosts = async () => {
     try {
       const { data: fetchedData } = await axios.get('https://api-playground-ten.vercel.app/posts');
       localStorage.setItem("database-data",  JSON.stringify(fetchedData))
+      
       fetchedData.forEach((post) => {
             // console.log(post.title);
             // localStorage.setItem(`post-${post._id}`, JSON.stringify(post));
@@ -24,8 +25,6 @@ const getAllPosts = async () => {
   };
 
 getAllPosts();  
-
-
 
 const { contact: { phone} } = {
     name: 'John Doe',
