@@ -55,7 +55,7 @@
 ### Part 2: Front-End (Vanilla JavaScript) and Displaying Data
 
 #### **Exercise 8: Fetch All Posts and Display in Console**
-- Use vanilla JavaScript to fetch all posts from the API and log them to the console.
+- Use vanilla JavaScript to | fetch all posts from the API  | and log them to the console. |
 
 ---
 
