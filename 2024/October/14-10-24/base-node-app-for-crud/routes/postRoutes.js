@@ -34,6 +34,11 @@ router.get('/:id', async (req, res) => {
     if (!post) return res.status(404).json({ message: 'Post not found' });
     res.json(post);
   } catch (err) {
+
+    // handle mongoose Cast to ObjectId failure
+    if (err.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid Post ID' });
+    }
     res.status(500).json({ message: err.message });
   }
 });
