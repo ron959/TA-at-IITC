@@ -7,24 +7,27 @@ const getAllPosts = async () => {
       const { data: fetchedData } = await axios.get('https://api-playground-ten.vercel.app/posts');
       localStorage.setItem("database-data",  JSON.stringify(fetchedData))
       
-      fetchedData.forEach((post) => {
-            // console.log(post.title);
-            // localStorage.setItem(`post-${post._id}`, JSON.stringify(post));
-            postListElement.innerHTML += (`
-                <li>
-                    <div>
-                        <h2>${post.title}</h2>
-                        <p>${post.content}</p>
-                    </div>
-                </li>    
-            `)
-        });
+    //   fetchedData.forEach((post) => {
+    //         // console.log(post.title);
+    //         // localStorage.setItem(`post-${post._id}`, JSON.stringify(post));
+    //         postListElement.innerHTML += (`
+    //             <li>
+    //                 <div>
+    //                     <h2>${post.title}</h2>
+    //                     <p>${post.content}</p>
+    //                 </div>
+    //             </li>    
+    //         `)
+    //     });
+    return fetchedData
     } catch (error) {
       console.error('Error fetching posts:', error.response?.data || error.message);
     }
   };
 
-getAllPosts();  
+async function useData () {
+    const data = await getAllPosts()
+}
 
 const { contact: { phone} } = {
     name: 'John Doe',
