@@ -1,7 +1,7 @@
 import express from "express";
+import morgan from "morgan";
 
 const app = express();
-
 const PORT = 3000;
 
 // Dummy DB Import
@@ -9,11 +9,11 @@ import jokes from './db/jokes.json' assert { type: "json" };
 import users from './db/users.json' assert { type: "json" };
 import products from './db/products.json' assert { type: "json" }
 
-console.log(jokes);
+// console.log(jokes);
 
 // For parsing application/json
 app.use(express.json());
-
+app.use(morgan("short"))
 
 
 app.get("/", (req, res) => {
