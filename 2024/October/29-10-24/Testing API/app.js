@@ -1,10 +1,11 @@
 import fs from "fs/promises"
 import express from "express"
 import morgan from "morgan"
-import { logRequest } from "./utils/Logger.js"
+import logRequest from "./utils/logger.js"
 
 const app = express()
 const PORT = 3000
+
 
 // Dummy DB Import
 import jokes from './db/jokes.json' assert { type: "json" }
@@ -13,7 +14,7 @@ import products from './db/products.json' assert { type: "json" }
 
 // Middleware
 app.use(express.json())
-app.use(morgan("short"))
+// app.use(morgan("short"))
 
 // Helper function to write data to JSON files
 const writeToFile = async (filename, data) => {
@@ -26,6 +27,7 @@ const writeToFile = async (filename, data) => {
     }
 }
 
+
 // Base Routes
 app.get("/", (req, res) => {
     logRequest()
@@ -33,7 +35,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/api/status", (req, res) => {
-    logRequest()
+      
     res.send({ message: "Server is UP" })
 })
 
