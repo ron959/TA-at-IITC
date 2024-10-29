@@ -1,8 +1,8 @@
 import fs from "fs/promises"
 import express from "express"
 import morgan from "morgan"
-import logRequest from "./utils/logger.js"
-
+import logRequest from "./middleware/logger.js"
+import authUser from './middleware/auth.js'
 const app = express()
 const PORT = 3000
 
@@ -14,7 +14,10 @@ import products from './db/products.json' assert { type: "json" }
 
 // Middleware
 app.use(express.json())
-// app.use(morgan("short"))
+app.use(morgan("tiny"))
+app.use(logRequest)
+app.use(authUser)
+// app.use(express.static('public'));
 
 // Helper function to write data to JSON files
 const writeToFile = async (filename, data) => {
@@ -27,15 +30,13 @@ const writeToFile = async (filename, data) => {
     }
 }
 
-
 // Base Routes
 app.get("/", (req, res) => {
-    logRequest()
-    res.send("Hello World")
+    // res.render("index.html")
+    res.send("Hello World!")
 })
 
 app.get("/api/status", (req, res) => {
-      
     res.send({ message: "Server is UP" })
 })
 
