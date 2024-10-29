@@ -3,10 +3,22 @@ import authUser from '../middleware/auth.js'
 
 // Dummy DB Import
 import jokes from '../db/jokes.json' assert { type: "json" }
+import { validateJoke } from "../middleware/validator.js"
 
 const router = express.Router()
 
-router.use(authUser)
+const writeToFile = async (filename, data) => {
+    try {
+        await fs.appendFile(filename, JSON.stringify(data))
+        return true
+    } catch (error) {
+        console.error(`Error writing to ${filename}:`, error)
+        return false
+    }
+}
+
+// router.use(authUser)
+// router.use(validateJoke)
 
 // Jokes Routes
 router.get('/', (req, res) => {
@@ -23,18 +35,14 @@ router.get("/:id", (req, res) => {
     const joke = jokes.find((joke) => joke.id === id)
     
     if (!joke) {
-        return res.json({ error: "Joke not found" })
+        return res.status(404).json({ error: "Joke not found" })
     }
     
     res.json(joke)
 })
 
-router.post("/", async (req, res) => {
+router.post("/", validateJoke, async (req, res) => {
     const { id, setup, punchline } = req.body
-
-    if (!setup || !punchline) {
-        return res.status(400).json({ error: "Setup and punchline are required" })
-    }
 
     const newJoke = {
         id,
@@ -43,7 +51,7 @@ router.post("/", async (req, res) => {
     }
 
     jokes.push(newJoke)
-    writeToFile("./db/jokes.json", jokes)
+    writeToFile("../db/jokes.json", jokes)
 
     res.status(201).json({
         message: "New joke added",
