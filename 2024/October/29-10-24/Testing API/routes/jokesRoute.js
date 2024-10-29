@@ -1,9 +1,12 @@
 import express from "express"
+import authUser from '../middleware/auth.js'
 
 // Dummy DB Import
 import jokes from '../db/jokes.json' assert { type: "json" }
 
 const router = express.Router()
+
+router.use(authUser)
 
 // Jokes Routes
 router.get('/', (req, res) => {
