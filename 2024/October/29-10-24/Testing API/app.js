@@ -2,13 +2,15 @@ import fs from "fs/promises"
 import express from "express"
 import morgan from "morgan"
 import logRequest from "./middleware/logger.js"
-import authUser from './middleware/auth.js'
+// import authUser from './middleware/auth.js'
+
+// Routes Import
+import jokesRoutes from "./routes/jokesRoute.js"
+
 const app = express()
 const PORT = 3000
 
-
 // Dummy DB Import
-import jokes from './db/jokes.json' assert { type: "json" }
 import users from './db/users.json' assert { type: "json" }
 import products from './db/products.json' assert { type: "json" }
 
@@ -16,7 +18,7 @@ import products from './db/products.json' assert { type: "json" }
 app.use(express.json())
 app.use(morgan("tiny"))
 app.use(logRequest)
-app.use(authUser)
+// app.use(authUser)
 // app.use(express.static('public'));
 
 // Helper function to write data to JSON files
@@ -40,87 +42,8 @@ app.get("/api/status", (req, res) => {
     res.send({ message: "Server is UP" })
 })
 
-// Jokes Routes
-app.get('/api/jokes', (req, res) => {
-    res.json(jokes)
-})
-
-app.get('/api/jokes/random', (req, res) => {
-    const randomJoke = jokes[Math.floor(Math.random() * jokes.length)]
-    res.json(randomJoke)
-})
-
-app.get("/api/jokes/:id", (req, res) => {
-    const id = +req.params.id
-    const joke = jokes.find((joke) => joke.id === id)
-    
-    if (!joke) {
-        return res.json({ error: "Joke not found" })
-    }
-    
-    res.json(joke)
-})
-
-app.post("/api/jokes", async (req, res) => {
-    const { id, setup, punchline } = req.body
-
-    if (!setup || !punchline) {
-        return res.status(400).json({ error: "Setup and punchline are required" })
-    }
-
-    const newJoke = {
-        id,
-        setup,
-        punchline
-    }
-
-    jokes.push(newJoke)
-    writeToFile("./db/jokes.json", jokes)
-
-    res.status(201).json({
-        message: "New joke added",
-        joke: newJoke
-    })
-})
-
-app.put("/api/jokes/:id", async (req, res) => {
-    const id = +req.params.id
-    const { setup, punchline } = req.body
-    const jokeIndex = jokes.findIndex(joke => joke.id === id)
-    
-    jokes[jokeIndex] = { ...jokes[jokeIndex], setup, punchline }
-    const success = await writeToFile("./db/jokes.json", jokes)
-
-    if (!success) {
-        return res.status(500).json({ error: "Failed to update joke" })
-    }
-
-    res.json({
-        message: "Joke updated",
-        joke: jokes[jokeIndex]
-    })
-})
-
-app.delete("/api/jokes/:id", async (req, res) => {
-    const id = +req.params.id
-    const jokeIndex = jokes.findIndex(joke => joke.id === id)
-    
-    if (jokeIndex === -1) {
-        return res.status(404).json({ error: "Joke not found" })
-    }
-
-    const deletedJoke = jokes.splice(jokeIndex, 1)[0]
-    const success = await writeToFile("./db/jokes.json", jokes)
-
-    if (!success) {
-        return res.status(500).json({ error: "Failed to delete joke" })
-    }
-
-    res.json({
-        message: "Joke deleted",
-        joke: deletedJoke
-    })
-})
+// Jokes
+app.use("/api/jokes", jokesRoutes)
 
 // Users Routes
 app.get('/api/users', (req, res) => {
