@@ -1,101 +1,142 @@
 import express from "express"
-import authUser from '../middleware/auth.js'
 
-// Dummy DB Import
-import jokes from '../db/jokes.json' assert { type: "json" }
 import { validateJoke } from "../middleware/validator.js"
+
+import Joke from '../models/jokeModel.js'
 
 const router = express.Router()
 
-const writeToFile = async (filename, data) => {
+// Get All Jokes
+// DONE: WORKING
+router.get('/all', async (req, res) => {
     try {
-        await fs.appendFile(filename, JSON.stringify(data))
-        return true
+        const jokes = await Joke.find({})
+
+        if (jokes.length === 0) {
+            res.status(404).send({
+                message: "Add Some Jokes -  ימצחיק"
+            })
+        }
+        res.send(jokes)
     } catch (error) {
-        console.error(`Error writing to ${filename}:`, error)
-        return false
+        res.status(500).send("Unknown Server Error")
     }
-}
-
-// router.use(authUser)
-// router.use(validateJoke)
-
-// Jokes Routes
-router.get('/', (req, res) => {
-    res.json(jokes)
 })
 
-router.get('/random', (req, res) => {
-    const randomJoke = jokes[Math.floor(Math.random() * jokes.length)]
-    res.json(randomJoke)
-})
-
-router.get("/:id", (req, res) => {
-    const id = +req.params.id
-    const joke = jokes.find((joke) => joke.id === id)
-    
-    if (!joke) {
-        return res.status(404).json({ error: "Joke not found" })
-    }
-    
-    res.json(joke)
-})
-
+// Add a new Joke
+// DONE: WORKING
 router.post("/", validateJoke, async (req, res) => {
-    const { id, setup, punchline } = req.body
+    try {
+        const { setup, punchline } = req.body
 
-    const newJoke = {
-        id,
-        setup,
-        punchline
-    }
-
-    jokes.push(newJoke)
-    writeToFile("../db/jokes.json", jokes)
-
-    res.status(201).json({
-        message: "New joke added",
-        joke: newJoke
-    })
-})
-
-router.put("/:id", async (req, res) => {
-    const id = +req.params.id
-    const { setup, punchline } = req.body
-    const jokeIndex = jokes.findIndex(joke => joke.id === id)
+        const newJoke = await new Joke({
+            setup,
+            punchline
+        }).save()
     
-    jokes[jokeIndex] = { ...jokes[jokeIndex], setup, punchline }
-    const success = await writeToFile("./db/jokes.json", jokes)
+        res.status(201).json({
+            message: "New joke added",
+            joke: newJoke
+        })
 
-    if (!success) {
-        return res.status(500).json({ error: "Failed to update joke" })
+    } catch (error) {
+        res.status(500).send("Unknown Server Error")
     }
-
-    res.json({
-        message: "Joke updated",
-        joke: jokes[jokeIndex]
-    })
 })
 
+// Get a random Joke
+// DONE: WORKING
+router.get('/random', async (req, res) => {
+    const randomJoke = await Joke.aggregate([
+        {
+            $sample: {
+                size: 1
+            }
+        }
+    ])
+
+    res.status(200).send(randomJoke[0])
+})
+
+// Get a Joke by ID
+router.get("/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+        const foundJoke = await Joke.findById(id)
+        
+        if (!foundJoke) {
+            res.status(404).send({
+                message: `NO Joke found with id: ${id}`
+            })
+        }
+
+        res.send(foundJoke)
+    } catch (error) {
+        res.status(500)
+    }
+})
+
+// Update a Joke
+router.patch("/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+        const { setup, punchline } = req.body
+
+        const fieldsToUpdate = {}
+
+        if (setup || setup !== "") {
+            fieldsToUpdate.setup = setup
+        }
+
+        if (punchline || punchline !== "") {
+            fieldsToUpdate.punchline = punchline
+        }
+
+        const updatedJoke = await Joke.findByIdAndUpdate(id, fieldsToUpdate, {new: true})
+
+        if (!updatedJoke) {
+            res.status(404).send({
+                message: `NO Joke found with id: ${id}`
+            })
+        }
+
+        res.status(201).send(updatedJoke)
+    } catch (error) {
+        // console.log(error);
+        res.status(500)
+    }
+})
+
+// Update Full Joke
+router.put('/:id', validateJoke, async (req, res) => {
+    try {
+        const { id } = req.params
+        const updatedJoke = await Joke.findByIdAndUpdate(
+            id, 
+            req.body, 
+            {new: true}
+        )
+
+        res.status(201).send(updatedJoke)
+    } catch (error) {
+        res.status(500)
+    }
+})
+
+
+// Delete Joke
 router.delete("/:id", async (req, res) => {
-    const id = +req.params.id
-    const jokeIndex = jokes.findIndex(joke => joke.id === id)
-    
-    if (jokeIndex === -1) {
-        return res.status(404).json({ error: "Joke not found" })
+    const { id } = req.params
+
+    try {
+        await Joke.findByIdAndDelete(id)
+        res.status(200).send({
+            message: "Joke Succefully Delete"
+        })
+
+    } catch (error) {
+        
     }
-
-    const deletedJoke = jokes.splice(jokeIndex, 1)[0]
-    const success = await writeToFile("./db/jokes.json", jokes)
-
-    if (!success) {
-        return res.status(500).json({ error: "Failed to delete joke" })
-    }
-
-    res.json({
-        message: "Joke deleted",
-        joke: deletedJoke
-    })
 })
 
 export default router

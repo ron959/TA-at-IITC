@@ -3,12 +3,21 @@ import express from "express"
 import morgan from "morgan"
 import logRequest from "./middleware/logger.js"
 // import authUser from './middleware/auth.js'
+import mongoose from "mongoose"
 
 // Routes Import
 import jokesRoutes from "./routes/jokesRoute.js"
 
 const app = express()
 const PORT = 3000
+
+
+// DB Connection
+const URI = "mongodb+srv://lironefit:gaxuwijeAeTJZs4d@cluster0.3ic72.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+mongoose.connect(URI).then(() => {
+    console.log("Successfully Conected to MongoDb Server");
+})
 
 // Dummy DB Import
 import users from './db/users.json' assert { type: "json" }
