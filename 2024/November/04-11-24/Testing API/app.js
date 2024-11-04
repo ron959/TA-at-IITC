@@ -1,4 +1,3 @@
-import fs from "fs/promises"
 import express from "express"
 import morgan from "morgan"
 import logRequest from "./middleware/logger.js"
@@ -9,6 +8,7 @@ import mongoose from "mongoose"
 
 // Routes Import
 import jokesRoutes from "./routes/jokesRoute.js"
+import userRoutes from './routes/userRoute.js'
 
 const app = express()
 const PORT = 3000
@@ -32,6 +32,7 @@ app.use(morgan("tiny"))
 app.use(logRequest)
 
 app.use('/api/jokes', jokesRoutes)
+app.use('/api/users', userRoutes)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

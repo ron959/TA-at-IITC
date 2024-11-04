@@ -2,7 +2,7 @@ import Joke from '../models/jokeModel.js'
 
 export const getAllJokes = async (req, res) => {
     try {
-        const jokes = await Joke.find({})
+        const jokes = await Joke.find().populate('owner')
 
         if (jokes.length === 0) {
             res.status(404).send({
@@ -17,11 +17,12 @@ export const getAllJokes = async (req, res) => {
 
 export const addNewJoke = async (req, res) => {
     try {
-        const { setup, punchline } = req.body
+        const { setup, punchline, owner } = req.body
 
         const newJoke = await new Joke({
             setup,
-            punchline
+            punchline,
+            owner
         }).save()
     
         res.status(201).json({
