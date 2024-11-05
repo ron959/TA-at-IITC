@@ -1,42 +1,15 @@
 import express from "express";
-import User from "../models/userModel.js";
 const router = express.Router();
 
-router.get("/all", async (req, res) => {
-  try {
-    const allFetchedUsers = await User.find();
+import {
+  getAllUser,
+  createUser,
+  signInUser
+} from '../controllers/userController.js'
 
-    res.status(200).send({
-      status: "success",
-      message: "Users Found",
-      data: allFetchedUsers,
-    });
-  } catch (error) {
-    res.status(500);
-  }
-});
+router.get("/all", getAllUser);
 
-router.post("/new-user", async (req, res) => {
-  const { fName, lName, phoneNumber } = req.body;
-  try {
-    const newUser = new User({
-      fName,
-      lName,
-      phoneNumber,
-    });
+router.post("/signup", createUser);
 
-    await newUser.save()
-
-    res.status(201).send({
-        status: 'success',
-        message: 'User Succefully Regitered',
-        data: newUser
-    })
-  } catch (error) {
-    if (error.errorResponse.code === 11000) {
-      res.status(400).send(error.errorResponse.errmsg)
-    }
-    res.status(500).send(error)
-  }
-});
+router.post('/signin', signInUser)
 export default router;
