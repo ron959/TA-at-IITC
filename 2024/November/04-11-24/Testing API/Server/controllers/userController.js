@@ -1,5 +1,8 @@
 import User from "../models/userModel.js";
-import bcrypt from 'bcrypt'
+
+// Utils Import
+import { hashPassword, comparePassword } from "../utils/auth.js";
+
 export const getAllUser = async (req, res) => {
   try {
     const allFetchedUsers = await User.find();
@@ -17,15 +20,15 @@ export const getAllUser = async (req, res) => {
 export const createUser = async (req, res) => {
   const { fName, lName, phoneNumber, password } = req.body;
   try {
-    const hashedPassword = await hashPassword(password)
+    const hashedPassword = await hashPassword(password);
 
-    // console.log(hashedPassword);
-    
+    // console.log("hashed: " + hashedPassword);
+
     const newUser = new User({
       fName,
       lName,
       phoneNumber,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     await newUser.save();
@@ -44,20 +47,24 @@ export const createUser = async (req, res) => {
 };
 
 export const signInUser = async (req, res) => {
-    try {
-        res.status(200).send("Not Implemented yet")
-    } catch (error) {
-        res.status(500)
-    }
-}
+  try {
+    const { phoneNumber, password } = req.body;
+    const foundUser = await User.findOne({ phoneNumber });
+    const isAuth = await comparePassword(password, foundUser.password);
 
-async function hashPassword(userPassword) {
-    const saltRounds = 10
-    const secretKey = process.env.ENCYPTION_SECRET
-    const combinedPassword = userPassword + secretKey
+    console.log(isAuth);
 
-    console.log(combinedPassword);
-    
-    const hashedPassword = await bcrypt.hash(combinedPassword, saltRounds)
-    return hashedPassword
-}
+    res.status(200).send(isAuth);
+  } catch (error) {
+    res.status(500);
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const foundUser = await User.findById(req.params.id).populate("userJokes")
+    res.send(foundUser)
+  } catch (error) {
+    res.status(500);
+  }
+};
