@@ -1,22 +1,19 @@
 const express = require("express");
-const requestIp = require('request-ip');
+require('dotenv').config()
 
-const PORT = 3000;
+const PORT = 3000
+const dbUri = process.env.DB_URI
 
 const app = express()
 
 app.use(express.json())
 
+mongoose.connect(dbUri)
+
 app.get("/", (req, res) => {
     res.send("Hello World!")
 })
 
-app.get("/get-my-ip", (req, res) => {
-    const ip = requestIp.getClientIp(req)
-    res.send({
-        ip
-    })
-})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
