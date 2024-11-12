@@ -55,14 +55,15 @@ const findUserById = async (req, res) => {
       data: foundUser,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
-    if (error.name === "CastError"){
+    if (error?.name === "CastError"){
         return res.status(400).send({
             status: "failed",
             data: "this is not a valide id at all",
         })
     }
+    
     res.status(500).send(error);
   }
 };
