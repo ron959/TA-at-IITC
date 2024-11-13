@@ -1,6 +1,9 @@
 // Models Import
 const User = require("../models/userModel.js");
 
+// Import Error Handler
+const errorHandler = require("../middleware/errorHandler.js");
+// Create
 const createUser = async (req, res) => {
   try {
     const { fName, lName, phoneNumber, email } = req.body;
@@ -34,10 +37,11 @@ const createUser = async (req, res) => {
       });
     }
 
-    res.status(500).send(error);
+    errorHandler(error, req, res);
   }
 };
 
+// Read
 const findUserById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -63,10 +67,14 @@ const findUserById = async (req, res) => {
             data: "this is not a valide id at all",
         })
     }
-    
-    res.status(500).send(error);
+
+    errorHandler(error, req, res);
   }
 };
+
+// Update
+
+// Delete
 
 module.exports = {
   createUser,
