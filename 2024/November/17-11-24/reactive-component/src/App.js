@@ -10,14 +10,15 @@ function App() {
   return (
     <div className="App">
       Choose a number
-      {/* {didUserSubmit ? ( */}
+      {didUserSubmit ? (
         <ResultComp userChoice={userChoice} />
-      {/* ) : ( */}
-        <FormComp 
+      ) : (
+        <FormComp
+          customFontSize="2rem"
           updateFunction={setUserChoice}
           setDidUserSubmit={setDidUserSubmit}
         />
-      {/* )} */}
+      )}
     </div>
   );
 }

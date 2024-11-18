@@ -7,7 +7,9 @@ const FormComp = (props) => {
     }
     
     return (
-        <div>
+        <div style={{
+            fontSize: props.customFontSize
+        }}>
             <span onClick={updateChoice}>1</span>
             <span onClick={updateChoice}>2</span>
             <span onClick={updateChoice}>3</span>
