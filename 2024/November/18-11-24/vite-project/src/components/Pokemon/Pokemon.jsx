@@ -1,38 +1,15 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import styles from  './Pokemon.module.css'
+import styles from './Pokemon.module.css';
 
-const Pokemon = ({ name, url }) => {
-  const [pokemon, setPokemon] = useState(null);
-
-  const fetchData = async () => {
-    try {
-      const { data } = await axios.get(url);
-      setPokemon(data);
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+const Pokemon = ({ name, imageUrl, types, baseExperience, weight, height }) => {
   return (
-    pokemon && (
-      <div className={styles.card}>
-        <h1>{name}</h1>
-        <div>
-          <h2>Abilties</h2>
-          <ul>
-            {pokemon.abilities.map(({ ability }) => (
-              <li key={ability.name}>{ability.name}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    )
+    <div className={styles.card}>
+      <h2>{name}</h2>
+      <img src={imageUrl} alt={name} />
+      <p><strong>Types:</strong> {types.map(type => type.type.name).join(', ')}</p>
+      <p><strong>Base Experience:</strong> {baseExperience}</p>
+      <p><strong>Weight:</strong> {weight} kg</p>
+      <p><strong>Height:</strong> {height} m</p>
+    </div>
   );
 };
 
