@@ -1,29 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import styles from './PokemonDialog.module.css';
+import typeBackgrounds from './utils/typeBackgrounds.jsx'
 
 const PokemonDialog = ({ isOpen, pokemonData, onClose }) => {
-  const [type, setType] = useState('stats');
+  const [overview, setoverview] = useState('stats');
+  const [backgroundImage, setbackgroundImage] = useState('normal');
+
 
   useEffect(() => {
-    if (!isOpen) setType('stats');
+    if (!isOpen) setoverview('stats'); // Reset to 'stats' when dialog closes    
   }, [isOpen]);
+
+  const matchingType = pokemonData.types.find((item) => typeBackgrounds[item.type.name]);
+  // console.log(typeBackgrounds[matchingType.type.name]);
+  
+  
+  useEffect(() => {
+    // Check if firstType exists in typeBackgrounds
+    if (matchingType) {
+      setbackgroundImage(typeBackgrounds[matchingType.type.name]); // Set the matching background
+    }
+  }, [backgroundImage]); 
+  console.log(backgroundImage); // Log the background URL
+
 
   if (!isOpen || !pokemonData) return null;
 
   return (
-    <div className={styles.dialogContainer} onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className={styles.dialog}>
-        <button onClick={onClose} className={styles.closeButton}>Close</button>
-        <h2>{pokemonData.name}</h2>
-        <img src={pokemonData.sprites.other['official-artwork'].front_default} alt={pokemonData.name} />
-
+    <div className={styles.dialogContainer} 
+    
+      style={{ backgroundImage: `url(${backgroundImage})`}}
+    >
+      <div 
+      className={styles.dialogHeader}
+      >
+        <button onClick={onClose} className={styles.closeButton}>🔙</button>
+        <h2><strong>{pokemonData.name}</strong></h2>
+        <span id= 'types'> {pokemonData.types.map(type => type.type.name).join(', ')}</span>
+      </div>
+      <img src={pokemonData.sprites.other['official-artwork'].front_default} alt={pokemonData.name} />
+      <div
+      className={styles.dialogBody}
+      >
         <div className={styles.buttonGroup}>
-          <button onClick={() => setType('stats')}>Stats</button>
-          <button onClick={() => setType('abilities')}>Abilities</button>
-          <button onClick={() => setType('basic')}>Basic Information</button>
+          <button onClick={() => setoverview('stats')}>Stats</button>
+          <button onClick={() => setoverview('abilities')}>Abilities</button>
+          <button onClick={() => setoverview('basic')}>Basic Information</button>
         </div>
 
-        {type === 'stats' && (
+        {overview === 'stats' && (
           <div>
             <h2>Stats</h2>
             <ul>
@@ -36,7 +61,7 @@ const PokemonDialog = ({ isOpen, pokemonData, onClose }) => {
           </div>
         )}
 
-        {type === 'abilities' && (
+        {overview === 'abilities' && (
           <div>
             <h2>Abilities</h2>
             <ul>
@@ -47,7 +72,7 @@ const PokemonDialog = ({ isOpen, pokemonData, onClose }) => {
           </div>
         )}
 
-        {type === 'basic' && (
+        {overview === 'basic' && (
           <div>
             <h2>Basic Information</h2>
             <p><strong>Base Experience:</strong> {pokemonData.base_experience}</p>
@@ -55,7 +80,7 @@ const PokemonDialog = ({ isOpen, pokemonData, onClose }) => {
             <p><strong>Height:</strong> {pokemonData.height} m</p>
           </div>
         )}
-      </div>
+        </div>
     </div>
   );
 };
